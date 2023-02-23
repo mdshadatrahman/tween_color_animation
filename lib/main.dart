@@ -26,12 +26,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Home Page'),
-      ),
-      body: const Center(
-        child: Text('Home Page'),
+      body: Center(
+        child: ClipPath(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width,
+            color: Colors.red,
+          ),
+        ),
       ),
     );
   }
