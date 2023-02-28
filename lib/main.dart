@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 void main() {
   runApp(const MyApp());
@@ -40,8 +41,22 @@ class CircleClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-class HomePage extends StatelessWidget {
+Color getRandomColor() => Color(0xFF000000 + math.Random().nextInt(0x00FFFFFF));
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  var _color = getRandomColor();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +64,28 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: ClipPath(
           clipper: const CircleClipper(),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.width,
-            color: Colors.red,
+          child: TweenAnimationBuilder(
+            tween: ColorTween(begin: getRandomColor(), end: _color),
+            duration: const Duration(seconds: 1),
+            onEnd: () {
+              setState(() {
+                _color = getRandomColor();
+              });
+            },
+            builder: (context, value, child) {
+              return ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  value!,
+                  BlendMode.srcATop,
+                ),
+                child: child,
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width,
+              color: getRandomColor(),
+            ),
           ),
         ),
       ),
